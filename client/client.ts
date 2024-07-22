@@ -41,9 +41,10 @@ console.log(
 );
 
 // The following are just some checks to make sure your playground is setup correctly and you got enough devnet sol
-const MINIMUM_BALANCE_REQUIRED = 1e9; // for example, 1 SOL
 
 async function performChecks(pg: any) {
+  const MINIMUM_BALANCE_REQUIRED = 1e9 * 10; // for example, 1 SOL
+
   if (!pg.wallet || !pg.wallet.keypair) {
     throw new Error(
       "You first need to connect your playground wallet at the bottom left"
@@ -56,8 +57,9 @@ async function performChecks(pg: any) {
   );
 
   if (walletBalance < MINIMUM_BALANCE_REQUIRED) {
-    throw new Error(
-      `To get some devnet sol you can use this link: https://faucet.solana.com/?walletAddress=${pg.wallet.keypair.publicKey.toString()}&amount=1`
+    console.log(
+      `You sol balance is low. To get some devnet sol you can use this link:
+      https://faucet.solana.com/?walletAddress=${pg.wallet.keypair.publicKey.toString()}&amount=1`
     );
   }
 
