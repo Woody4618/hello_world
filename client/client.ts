@@ -58,7 +58,7 @@ async function performChecks(pg: any) {
 
   if (walletBalance < MINIMUM_BALANCE_REQUIRED) {
     console.log(
-      `You sol balance is low. To get some devnet sol you can use this link:
+      `Your sol balance is low. To get some devnet SOL you can use this link:
       https://faucet.solana.com/?walletAddress=${pg.wallet.keypair.publicKey.toString()}&amount=1`
     );
   }
