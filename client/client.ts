@@ -1,16 +1,18 @@
-// Client code...
+// Client code written in java script
 
-console.log("programID: ", pg.PROGRAM_ID.toString());
+await performChecks(pg);
 
-//Get the latest blockhash info
+console.log("ProgramID: ", pg.PROGRAM_ID.toString());
+
+// Get the latest blockhash info
 const blockhashInfo = await pg.connection.getLatestBlockhash();
 
-//create transaction
+// Create transaction
 const tx = new web3.Transaction({
   ...blockhashInfo,
 });
 
-//Add hello world program
+// Add our Hello World instruction
 
 tx.add(
   new web3.TransactionInstruction({
@@ -20,12 +22,46 @@ tx.add(
   })
 );
 
-// sign transaction
+// Sign transaction
 tx.sign(pg.wallet.keypair);
 
-//send the transaction to solana network
+// Send the transaction to solana network
 const txHash = await pg.connection.sendRawTransaction(tx.serialize());
-console.log("transaction sent with hash:", txHash);
+console.log("Transaction sent with hash:", txHash);
 
-var result = await pg.connection.confirmTransaction(txHash);
-console.log("confrim:", txHash);
+var result = await pg.connection.confirmTransaction({
+  blockhash: blockhashInfo.blockhash,
+  lastValidBlockHeight: blockhashInfo.lastValidBlockHeight,
+  signature: txHash,
+});
+
+console.log(
+  `Congratulations! Look at your transaction in the Solana Explorer: 
+  https://explorer.solana.com/tx/${txHash}?cluster=devnet`
+);
+
+// The following are just some checks to make sure your playground is setup correctly and you got enough devnet sol
+const MINIMUM_BALANCE_REQUIRED = 1e9; // for example, 1 SOL
+
+async function performChecks(pg: any) {
+  if (!pg.wallet || !pg.wallet.keypair) {
+    throw new Error(
+      "You first need to connect your playground wallet at the bottom left"
+    );
+  }
+
+  // Get the balance of the wallet and check if we have enough
+  const walletBalance = await pg.connection.getBalance(
+    pg.wallet.keypair.publicKey
+  );
+
+  if (walletBalance < MINIMUM_BALANCE_REQUIRED) {
+    throw new Error(
+      `To get some devnet sol you can use this link: https://faucet.solana.com/?walletAddress=${pg.wallet.keypair.publicKey.toString()}&amount=1`
+    );
+  }
+
+  if (!pg.PROGRAM_ID) {
+    throw new Error("You first need to ‘build‘ and ‘deploy‘ your program");
+  }
+}
