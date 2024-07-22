@@ -43,7 +43,7 @@ console.log(
 // The following are just some checks to make sure your playground is setup correctly and you got enough devnet sol
 
 async function performChecks(pg: any) {
-  const MINIMUM_BALANCE_REQUIRED = 1e9 * 10; // for example, 1 SOL
+  const MINIMUM_BALANCE_REQUIRED = 1e9; // for example, 1 SOL
 
   if (!pg.wallet || !pg.wallet.keypair) {
     throw new Error(
