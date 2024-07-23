@@ -13,7 +13,6 @@ const tx = new web3.Transaction({
 });
 
 // Add our Hello World instruction
-
 tx.add(
   new web3.TransactionInstruction({
     programId: pg.PROGRAM_ID,
@@ -22,7 +21,7 @@ tx.add(
   })
 );
 
-// Sign transaction
+// Sign transaction with our playground wallet
 tx.sign(pg.wallet.keypair);
 
 // Send the transaction to solana network
@@ -36,7 +35,7 @@ var result = await pg.connection.confirmTransaction({
 });
 
 console.log(
-  `Congratulations! Look at your transaction in the Solana Explorer: 
+  `Congratulations! Look at your 'Hello World' transaction in the Solana Explorer: 
   https://explorer.solana.com/tx/${txHash}?cluster=devnet`
 );
 
